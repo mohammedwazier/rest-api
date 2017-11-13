@@ -1,5 +1,4 @@
 const Model=require("../models").user;
-const bcrypt=require("bcrypt");
 
 const signup=(req,res)=>{
     const inputData={
@@ -8,13 +7,17 @@ const signup=(req,res)=>{
         isAdmin:false
     }
     Model.create(inputData).then((stats)=>{
-        res.send({username:req.body.username,isAdmin:req.body.isAdmin});
+        res.send(stats);
     }).catch((err)=>{
         console.log(err);
     });
 }
 
 const signin=(req,res)=>{
+    res.send({
+        id:req.id,
+        token:req.token
+    });
 }
 
 const getAllUsers=(req,res)=>{
@@ -40,7 +43,7 @@ const createUser=(req,res)=>{
         isAdmin:req.body.isAdmin
     }
     Model.create(inputData).then((stats)=>{
-        res.send({username:req.body.username,isAdmin:req.body.isAdmin});
+        res.send(stats);
     }).catch((err)=>{
         console.log(err);
     });
@@ -61,18 +64,16 @@ const deleteUser=(req,res)=>{
 }
 
 const updateUser=(req,res)=>{
-    bcrypt.hash(req.body.password,10).then((hash)=>{
-        Model.update({
-            username:req.body.username,
-            password:hash,
-            isAdmin:req.body.isAdmin
-        },{
-            where:{
-                id:req.params.id
-            }
-        }).then((stats)=>{
-            res.send(stats);
-        });
+    Model.update({
+        username:req.body.username,
+        password:req.body.password,
+        isAdmin:req.body.isAdmin
+    },{
+        where:{
+            id:req.params.id
+        }
+    }).then((stats)=>{
+        res.send(stats);
     }).catch((err)=>{
         console.log(err);
     });

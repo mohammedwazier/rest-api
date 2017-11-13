@@ -20,5 +20,12 @@ module.exports = (sequelize, DataTypes) => {
          console.log(err);
      });
   });
+  user.beforeBulkUpdate((user)=>{
+      return bcrypt.hash(user.attributes.password,10).then((hash)=>{
+          user.attributes.password=hash;
+      }).catch((err)=>{
+          console.log(err);
+      });
+  });
   return user;
 };
